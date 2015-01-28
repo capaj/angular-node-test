@@ -1,0 +1,35 @@
+{
+  "name": "angular-node-test",
+  "version": "1.0.0",
+  "description": "The Find & Watch team at Sky are pleased to send you this unattended test. This means we think your CV is pretty good so we want to see if your approach to work is the same as ours.  Our team is very Agile and TDD oriented so we believe a few lines of great code speak more than endless CV pages!  We’d like you to use this test to show us how awesome you are at what you do.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capaj/angular-node-test.git"
+  },
+  "author": "capajj@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/capaj/angular-node-test/issues"
+  },
+  "homepage": "https://github.com/capaj/angular-node-test",
+  "jspm": {
+    "directories": {
+      "baseURL": "public"
+    },
+    "dependencies": {
+      "angular-material": "^0.7.0"
+    }
+  },
+  "dependencies": {
+    "express": "^4.11.1"
+  },
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "mocha": "^2.1.0",
+    "supertest": "^0.15.0"
+  }
+}
