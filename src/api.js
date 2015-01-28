@@ -24,12 +24,12 @@ module.exports = function(app) {
 	});
 
 	app.delete('/auth/:token', function(req, res){
-		var index = loggedInTokens.indexOf(req.token);
+		var index = loggedInTokens.indexOf(req.params.token);
 		if (index !== -1) {
 			loggedInTokens.splice(index, 1);
-			res.send(200);
+			res.sendStatus(200);
 		} else {
-			res.send(404);
+			res.sendStatus(404);
 		}
 
 	});

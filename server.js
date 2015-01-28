@@ -3,6 +3,8 @@ var bodyParser = require('body-parser');
 var app = express();
 app.use(bodyParser.json());
 var config = require('config');
+var morgan  = require('morgan');
+app.use(morgan('combined'));
 
 var api = require('./src/api')(app);
 

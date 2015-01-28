@@ -18,6 +18,7 @@ function makeAuthReq(user, resCode) {
 }
 
 describe('simple auth api.spec', function(){
+	var token;
 	it('should authenticate for known users', function(){
 		this.timeout = 10000;
 		var allTestedPromises = users.map(function(user) {
@@ -29,7 +30,9 @@ describe('simple auth api.spec', function(){
 	it('should authenticate for a known user with mismatched casing', function(){
 		var user = users[0];
 		var allUpperCaseName = user.name.toUpperCase();
-		return makeAuthReq({name: allUpperCaseName, password: user.password});
+		return makeAuthReq({name: allUpperCaseName, password: user.password}).then(function(res){
+		   token = res.text;	//well use this token in subsequent tests
+		});
 	});
 
 	it('should NOT authenticate for an unknown user', function(){
@@ -43,15 +46,20 @@ describe('simple auth api.spec', function(){
 	});
 	
 	it('should be able to logout a user who logged in', function(){
-		request(server)
+		return request(server)
 			.delete('/auth/' + token)
 			.expect(200);
 	});
 
-	it('should 404 when a user attempts to logout who is not logged in', function(){
-		request(server)
-			.delete('/auth/' + token)
-			.expect(404);
+	it('should 404 when a user attempts to logout who is not logged in(anymore)', function() {
+		return Promise.all([
+			request(server)
+				.delete('/auth/' + token)
+				.expect(404),
+			request(server)
+				.delete('/auth/aaathistokenisfake')
+				.expect(404)
+		]);
 	});
 
 	describe.skip('recording of attempts', function(){
