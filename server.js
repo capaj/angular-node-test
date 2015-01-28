@@ -19,7 +19,9 @@ app.listen(config.port).on('listening', function() {
 });
 
 app.post('/auth', function(req, res) {
-	var user =_.find(users, req.body);
+	var input = req.body;
+	input.name = input.name.toLowerCase();
+	var user =_.find(users, input);	//we expect that our names are stored lowercased
 	//TODO store in mongo
 	if (user) {
 		var token = hat();

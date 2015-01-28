@@ -14,32 +14,32 @@ function makeAuthReq(user, resCode) {
 	return request(server)
 		.post('/auth')
 		.send(user)
-		.expect(201 || resCode)
+		.expect(resCode || 201)
 }
 
 describe('simple auth api.spec', function(){
-	it('should authenticate for known users', function(done){
+	it('should authenticate for known users', function(){
 		this.timeout = 10000;
-		var allTestedPromises = users.map(makeAuthReq);
-		Promise.all(allTestedPromises).then(function(responses) {
-			done();
+		var allTestedPromises = users.map(function(user) {
+			return makeAuthReq(user);
 		});
+		return Promise.all(allTestedPromises);
 	});
 
-	it('should authenticate for a known user with mismatched casing', function(done){
+	it('should authenticate for a known user with mismatched casing', function(){
 		var user = users[0];
 		var allUpperCaseName = user.name.toUpperCase();
-		makeAuthReq({name: allUpperCaseName, password: user.password}).then(done);
+		return makeAuthReq({name: allUpperCaseName, password: user.password});
 	});
 
-	it('should NOT authenticate for an unknown user', function(done){
+	it('should NOT authenticate for an unknown user', function(){
 		var user = {name: 'john.smith', password: ''};
-		makeAuthReq(user, 401).then(done);
+		return makeAuthReq(user, 401);
 	});
 
-	it('should NOT authenticate for known user with wrong password', function(done){
+	it('should NOT authenticate for known user with wrong password', function(){
 		var user = {name: users[0].name, password: ''};
-		makeAuthReq(user, 401).then(done);
+		return makeAuthReq(user, 401);
 	});
 	
 	it('should be able to logout a user who logged in', function(){
@@ -59,7 +59,7 @@ describe('simple auth api.spec', function(){
 
 		});
 
-		it('should send us a new socket.io event so that clients live feed works', function(done){
+		it('should send us a new socket.io event so that clients live feed works', function(){
 			var c = 0; //counter
 			socket.on('attempt', function(data) {
 				c++;
@@ -67,9 +67,8 @@ describe('simple auth api.spec', function(){
 
 
 
-			Promise.all(users.map(makeAuthReq)).then(function() {
+			return Promise.all(users.map(makeAuthReq)).then(function() {
 				c.should.equal(users.length + 1);
-				done();
 			});
 
 		});
