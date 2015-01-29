@@ -5,6 +5,7 @@ app.use(bodyParser.json());
 var config = require('config');
 var morgan  = require('morgan');
 app.use(morgan('combined'));
+app.use(express.static('./public/'));
 
 var MongoClient = require('mongodb').MongoClient;
 

@@ -1,0 +1,18 @@
+<md-dialog aria-label="Mango (Fruit)">
+	<md-content>
+		<md-subheader class="md-sticky-no-effect">Please login:</md-subheader>
+		<md-input-container flex>
+			<label>Login</label>
+			<input ng-model="login" type="text">
+		</md-input-container>
+		<md-input-container flex>
+			<label>Password</label>
+			<input ng-model="password" type="password">
+		</md-input-container>
+	</md-content>
+	<div class="md-actions" layout="row">
+		<md-button ng-click="login()">
+			Login
+		</md-button>
+	</div>
+</md-dialog>
