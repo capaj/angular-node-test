@@ -1,3 +1,21 @@
+# Prerequisites
+
+If you don't have jspm, install it with this command:
+
+    npm i jspm -g
+
+#Usage
+
+For running backend unit test, use
+
+    npm test
+
+For starting the project
+
+    npm start
+
+ Project lacks a build pipeline for frontend minification. It can be very trivially added if it is desired.
+
 # Sky - Find & Watch Team - Welcome!
 
 The Find & Watch team at Sky are pleased to send you this unattended test. This means we think your CV is pretty good so we want to see if your approach to work is the same as ours. 
