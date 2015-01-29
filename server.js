@@ -6,10 +6,23 @@ var config = require('config');
 var morgan  = require('morgan');
 app.use(morgan('combined'));
 
-var api = require('./src/api')(app);
+var MongoClient = require('mongodb').MongoClient;
 
-app.listen(config.port).on('listening', function() {
-	console.log("server started on ", config.port);
+app.readyCB = function() {};
+
+MongoClient.connect(config.mongo, function(err, db) {
+	if (err) {
+		throw err;
+	}
+	app.readyCB(db);
+	console.log("Connected correctly to mongo");
+	var api = require('./src/api')(app, db);
+
+	app.listen(config.port).on('listening', function() {
+		console.log("server started on ", config.port);
+	});
 });
+
+
 
 module.exports = app;

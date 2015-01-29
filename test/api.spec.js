@@ -18,7 +18,23 @@ function makeAuthReq(user, resCode) {
 }
 
 describe('simple auth api.spec', function(){
+	var db;
 	var token;
+
+	before(function(done) {
+		server.readyCB = function(database) {
+			db = database;
+			database.collection('attempts', function(err, collection) {
+				if (err) {
+					throw err;
+				}
+				collection.remove({}, function() {
+					done();
+				});
+			});
+		};
+	});
+
 	it('should authenticate for known users', function(){
 		this.timeout = 10000;
 		var allTestedPromises = users.map(function(user) {
@@ -62,11 +78,19 @@ describe('simple auth api.spec', function(){
 		]);
 	});
 
-	describe.skip('recording of attempts', function(){
-		it('should record any authentication attempt in mongo', function(){
-
+	describe('storing attempts feature', function() {
+		it('should record any authentication attempt in mongo', function(done) {
+			db.collection('attempts', function(err, collection) {
+				collection.count(function(err, count) {
+					count.should.equal(8);
+					done();
+				});
+			});
 		});
 
+	});
+
+	describe.skip('live feed feature', function(){
 		it('should send us a new socket.io event so that clients live feed works', function(){
 			var c = 0; //counter
 			socket.on('attempt', function(data) {
@@ -81,6 +105,5 @@ describe('simple auth api.spec', function(){
 
 		});
 	});
-
 
 });
