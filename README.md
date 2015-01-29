@@ -13,6 +13,7 @@ For running backend unit test, use
 For starting the project
 
     npm start
+    //and visit localhost:8050
 
  Project lacks a build pipeline for frontend minification. It can be very trivially added if it is desired.
 
