@@ -1,4 +1,3 @@
-var socket = require('socket.io-client')('http://localhost:8050');
 var server = require('../server');
 var request = require('supertest-as-promised');
 var users = require('../data/default-users.json');
@@ -97,17 +96,31 @@ describe('simple auth api.spec', function(){
 
 	describe('live feed feature', function(){
 		this.timeout(5000);
+		var socket;
+		var io = require('socket.io-client');
+
+		before(function(done) {
+			return makeAuthReq(users[0]).then(function(res){
+				token = res.text;	//well use this token in subsequent tests
+				socket = io('http://localhost:8050', {
+					query: 'token=' + token
+				});
+				done()
+			});
+		});
+
 		it('should send a client socket.io events for every login attempt', function(done){
 
 			var c = 0; //counter
 			socket.on('attempt', function(data) {
 				c++;
-				if (c === 6) {
+				if (c === 2) {
 					done()
 				}
 			});
 
 			socket.on('connect', function() {
+				console.log("connects");
 				Promise.all(users.map(function(user) {
 					return makeAuthReq(user)
 				})).then(function() {

@@ -6,7 +6,6 @@ var config = require('config');
 var morgan  = require('morgan');
 app.use(morgan('combined'));
 
-
 var MongoClient = require('mongodb').MongoClient;
 
 app.readyCB = function() {};
@@ -25,7 +24,6 @@ MongoClient.connect(config.mongo, function(err, db) {
 		console.log("server started on ", config.port);
 	});
 });
-
 
 
 module.exports = app;
