@@ -7,10 +7,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<md-card ng-if="token" ng-controller="mainCtrl">
-
-</md-card>
-
+	<div ng-if="token" ng-controller="mainCtrl">
+		<md-button ng-click="logout()" id="logoutBtn">
+			Logout
+		</md-button>
+		<md-list>
+			<md-item ng-repeat="attempt in attempts">
+				<md-card>
+					{{ attempt }}
+				</md-card>
+			</md-item>
+		</md-list>
+	</div>
 
 <script src="jspm_packages/system.js"></script>
 <script src="config.js"></script>

@@ -1,4 +1,4 @@
-//var socket = require('socket.io-client')('http://localhost:8050');
+var socket = require('socket.io-client')('http://localhost:8050');
 var server = require('../server');
 var request = require('supertest-as-promised');
 var users = require('../data/default-users.json');
@@ -30,7 +30,6 @@ describe('simple auth api.spec', function(){
 	});
 
 	it('should authenticate for known users', function(){
-		this.timeout = 10000;
 		var allTestedPromises = users.map(function(user) {
 			return makeAuthReq(user);
 		});
@@ -46,11 +45,11 @@ describe('simple auth api.spec', function(){
 	});
 
 	it('should NOT authenticate for an unknown user', function(){
-		var user = {name: 'john.smith', password: ''};
+		var user = {name: 'john.smith', password: 'sss'};
 		return makeAuthReq(user, 401);
 	});
 
-	it('should NOT authenticate for known user with wrong password', function(){
+	it('should NOT authenticate for known user with wrong password', function() {
 		var user = {name: users[0].name, password: ''};
 		return makeAuthReq(user, 401);
 	});
@@ -59,6 +58,14 @@ describe('simple auth api.spec', function(){
 		return request(server)
 			.delete('/auth/' + token)
 			.expect(200);
+	});
+
+	it("should 400 when data posted don't have username or password", function(){
+		var user1 = {password: ''};
+		var user2 = {name: 'john.smith'};
+		return makeAuthReq(user1, 400).then(function() {
+			return makeAuthReq(user2, 400);
+		});
 	});
 
 	it('should 404 when a user attempts to logout who is not logged in(anymore)', function() {
@@ -75,10 +82,11 @@ describe('simple auth api.spec', function(){
 	describe('storing attempts feature', function() {
 		it('should record any authentication attempt in mongo with the right action', function(done) {
 			db.collection('attempts', function(err, collection) {
+				//TODO promisify and use promise.all
 				collection.find({action: actions.ok}).count(function(err, count) {
 					count.should.equal(6);
 					collection.find({action: actions.fail}).count(function(err, count) {
-						count.should.equal(2);
+						count.should.equal(4);
 						done();
 					});
 				});
@@ -87,17 +95,24 @@ describe('simple auth api.spec', function(){
 
 	});
 
-	describe.skip('live feed feature', function(){
-		it('should send us a new socket.io event so that clients live feed works', function(){
+	describe('live feed feature', function(){
+		this.timeout(5000);
+		it('should send a client socket.io events for every login attempt', function(done){
+
 			var c = 0; //counter
 			socket.on('attempt', function(data) {
 				c++;
+				if (c === 6) {
+					done()
+				}
 			});
 
-
-
-			return Promise.all(users.map(makeAuthReq)).then(function() {
-				c.should.equal(users.length + 1);
+			socket.on('connect', function() {
+				Promise.all(users.map(function(user) {
+					return makeAuthReq(user)
+				})).then(function() {
+					return makeAuthReq({name: 'fail', password: 'fail'}, 401);
+				});
 			});
 
 		});
