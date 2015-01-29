@@ -20,7 +20,9 @@ module.exports = angular.module('authApp', [
 				return $http.post('/auth', authObj).then(function(res) {
 					//user succesfully authorised
 					$rootScope.token = res.data;
-					socket = io.connect('http://localhost:8050');
+					socket = io.connect('http://localhost:8050', {
+						query: 'token=' + res.data
+					});
 				}, showDlg);
 			}, showDlg);
 		};
@@ -37,7 +39,7 @@ module.exports = angular.module('authApp', [
 				password: $scope.password
 			});
 		}
-	}).controller('mainCtrl', function($scope, $http, loginDlg) {
+	}).controller('mainCtrl', function($scope, $http, loginDlg, $rootScope) {
 		$scope.attempts = [];
 		socket.on('attempt', function(data) {
 			$scope.attempts.push(data);
@@ -45,8 +47,10 @@ module.exports = angular.module('authApp', [
 		});
 
 		$scope.logout = function() {
-			$http.get('/logout/' + $scope.token).then(function(){
+			$http.delete('/auth/' + $rootScope.token).then(function(){
 			    $scope.token = null;
+				$scope.attempts = [];
+				socket.disconnect();
 				loginDlg();
 			});
 		};

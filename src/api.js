@@ -25,6 +25,21 @@ module.exports = function(app, db) {
 		connectedSockets.splice(connectedSockets.indexOf(socket), 1);
 	});
 
+	io.use(function(socket, next) {
+		var token;
+		try {
+			token = socket.handshake.query.token;
+			if (loggedInTokens.indexOf(token) !== -1) {
+				return next();
+			} else {
+				return next(new Error('Not authorized'));
+			}
+		} catch (err) {
+			next(err);
+		}
+
+	});
+
 	var collection = db.collection('attempts');
 
 	app.post('/auth', function(req, res) {

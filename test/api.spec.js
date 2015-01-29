@@ -123,7 +123,10 @@ describe('simple auth api.spec', function(){
 			if (err) {
 				throw err;
 			}
-			collection.remove({}, function() {
+			collection.remove({}, function(err) {
+				if (err) {
+					throw err;
+				}
 				done();
 			});
 		});
