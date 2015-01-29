@@ -3,6 +3,7 @@ var server = require('../server');
 var request = require('supertest-as-promised');
 var users = require('../data/default-users.json');
 var Promise = require('bluebird');
+var actions = require('../src/actions');
 require('chai').should();
 
 /**
@@ -14,7 +15,7 @@ function makeAuthReq(user, resCode) {
 	return request(server)
 		.post('/auth')
 		.send(user)
-		.expect(resCode || 201)
+		.expect(resCode || 201);
 }
 
 describe('simple auth api.spec', function(){
@@ -24,14 +25,7 @@ describe('simple auth api.spec', function(){
 	before(function(done) {
 		server.readyCB = function(database) {
 			db = database;
-			database.collection('attempts', function(err, collection) {
-				if (err) {
-					throw err;
-				}
-				collection.remove({}, function() {
-					done();
-				});
-			});
+			done();
 		};
 	});
 
@@ -79,11 +73,14 @@ describe('simple auth api.spec', function(){
 	});
 
 	describe('storing attempts feature', function() {
-		it('should record any authentication attempt in mongo', function(done) {
+		it('should record any authentication attempt in mongo with the right action', function(done) {
 			db.collection('attempts', function(err, collection) {
-				collection.count(function(err, count) {
-					count.should.equal(8);
-					done();
+				collection.find({action: actions.ok}).count(function(err, count) {
+					count.should.equal(6);
+					collection.find({action: actions.fail}).count(function(err, count) {
+						count.should.equal(2);
+						done();
+					});
 				});
 			});
 		});
@@ -105,5 +102,16 @@ describe('simple auth api.spec', function(){
 
 		});
 	});
+
+	after(function(done) {
+		db.collection('attempts', function(err, collection) {
+			if (err) {
+				throw err;
+			}
+			collection.remove({}, function() {
+				done();
+			});
+		});
+	})
 
 });

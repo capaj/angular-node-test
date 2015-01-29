@@ -1,7 +1,7 @@
 var hat = require('hat');
 var _ = require('lodash');
 var users = require('../data/default-users.json');
-
+var actions = require('./actions');
 /**
  * holds active tokens
  * @type {Array<String>}
@@ -26,13 +26,13 @@ module.exports = function(app, db) {
 		};
 		if (user) {
 			attempt.user = user.name;
-			attempt.action = 'AUTH_SUCCESS';
+			attempt.action = actions.ok;
 			var token = hat();
 			loggedInTokens.push(token);
 			res.status(201).send(token)
 		} else {
-			attempt.action = 'AUTH_FAILURE';
-			res.send(401);
+			attempt.action = actions.fail;
+			res.sendStatus(401);
 		}
 
 		collection.insert(attempt, function(err, result) {
