@@ -7,7 +7,7 @@
     "test": "mocha",
     "postinstall": "jspm install",
     "build": "jspm bundle main",
-    "test-frontend": "node server.js & karma start test/karma.conf.js --single-run"
+    "test-frontend": "node server.js & karma start test-frontend/karma.conf.js --single-run"
   },
   "repository": {
     "type": "git",
