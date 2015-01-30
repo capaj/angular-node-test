@@ -1,22 +1,22 @@
 module.exports = function(config) {
 	config.set({
 		// base path, that will be used to resolve files and exclude
-		basePath: '../',
+		basePath: '',
 
 		// testing framework to use (jasmine/mocha/qunit/...)
-		frameworks: ['jspm', 'mocha', 'chai'],
+		frameworks: ['jspm', 'mocha', 'chai', 'sinon-chai'],
 
 		// list of files / patterns to load in the browser
 		files: [],
 		jspm: {
-			// Edit this to your needs
+			useBundles: true,
 			loadFiles: [
 				'public/jspm_packages/github/angular/bower-angular-mocks@1.3.11/angular-mocks.js',
-				'test-frontend/**/*.js'
+				'test-frontend/unit/*.js'
 			],
-			serveFiles: ['public/**'],
-			config: "public/config.js",
-			packages: "public/jspm_packages"
+			serveFiles: ['public/**']
+			//config: "public/config.js",
+			//packages: "public/jspm_packages"
 		},
 		// list of files / patterns to exclude
 		exclude: [],

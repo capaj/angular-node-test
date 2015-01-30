@@ -9,11 +9,13 @@ System.config({
 
 System.config({
   "map": {
+    "angular": "github:angular/bower-angular@1.3.11",
     "angular-material": "github:angular/bower-material@0.7.0",
     "angular-mocks": "github:angular/bower-angular-mocks@1.3.11",
     "bower-angular-messages": "github:angular/bower-angular-messages@1.3.11",
     "hammer.js": "github:hammerjs/hammer.js@2.0.4",
     "socket.io-client": "/socket.io/socket.io",
+    "text": "github:systemjs/plugin-text@0.0.2",
     "github:angular/bower-angular-animate@1.3.11": {
       "angular": "github:angular/bower-angular@1.3.11"
     },

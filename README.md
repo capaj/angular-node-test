@@ -6,7 +6,7 @@ If you don't have jspm, install it with this command:
 
 #Usage
 
-For running backend unit test, use
+For running backend unit test, frontend unit test, frontend e2e in chain use
 
     npm test
 
@@ -16,7 +16,8 @@ For starting the project
     //and visit localhost:8050
 
  Project lacks a build pipeline for frontend minification. It can be very trivially added if it is desired.
-
+Also it doesn't have a rate limiter. Rate limiter is crucial for any api, but might not be needed when this app is behind
+an nginx with a rate limiter set up for example.
 # Sky - Find & Watch Team - Welcome!
 
 The Find & Watch team at Sky are pleased to send you this unattended test. This means we think your CV is pretty good so we want to see if your approach to work is the same as ours. 

@@ -2,6 +2,7 @@ var hat = require('hat');
 var _ = require('lodash');
 var users = require('../data/default-users.json');
 var actions = require('./actions');
+var cors = require('cors');
 
 /**
  * holds active tokens
@@ -42,7 +43,9 @@ module.exports = function(app, db) {
 
 	var collection = db.collection('attempts');
 
-	app.post('/auth', function(req, res) {
+	app.options('*', cors());
+
+	app.post('/auth', cors(), function(req, res) {
 		var input = req.body;
 
 		var attempt = {
@@ -82,7 +85,7 @@ module.exports = function(app, db) {
 
 	});
 
-	app.delete('/auth/:token', function(req, res){
+	app.delete('/auth/:token', cors(), function(req, res){
 		var index = loggedInTokens.indexOf(req.params.token);
 		if (index !== -1) {
 			loggedInTokens.splice(index, 1);
